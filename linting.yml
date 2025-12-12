@@ -1,0 +1,23 @@
+stages:
+  - lint
+
+lint:
+  stage: lint
+  image: node:20
+  before_script:
+    - npm install
+    - npm install eslint-formatter-html --save-dev
+  script:
+    - echo "Running ESLint..."
+    # Generate JSON report (optional, for machine processing)
+    - npx eslint . -f json -o eslint-report.json || true
+    # Generate HTML report with all errors and warnings
+    - npx eslint . -f html -o eslint-report.html || true
+    # Optional: also show terminal output in stylish format
+    - npx eslint . -f stylish || true
+  artifacts:
+    when: always
+    paths:
+      - eslint-report.json
+      - eslint-report.html
+    expire_in: 1 week
