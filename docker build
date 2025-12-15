@@ -1,0 +1,20 @@
+stages:
+  - build
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_BUILDKIT: 1
+
+cache:
+  paths:
+    - node_modules/
+
+docker-build:
+  stage: build
+  script:
+    - echo "Building Docker image using host system Docker..."
+    - docker build -t anvex-speak-dashboard:$CI_COMMIT_REF_SLUG .
+    - echo "Docker image built successfully"
+    - docker images
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
