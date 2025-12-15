@@ -1,0 +1,20 @@
+stages:
+  - sonar
+
+variables:
+  SONAR_HOST_URL: "http://172.16.16.155:9000"
+  SONAR_PROJECT_KEY: "test-project"
+
+sonar_scan:
+  stage: sonar
+  image:
+    name: sonarsource/sonar-scanner-cli:latest
+    entrypoint: [""]
+  script:
+    - sonar-scanner \
+        -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+        -Dsonar.sources=. \
+        -Dsonar.host.url=$SONAR_HOST_URL \
+        -Dsonar.login=$SONAR_LOGIN
+  only:
+    - main
