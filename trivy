@@ -1,0 +1,35 @@
+stages:
+  - build
+  - security
+
+variables:
+  DOCKER_DRIVER: overlay2
+  DOCKER_BUILDKIT: 1
+
+cache:
+  paths:
+    - node_modules/
+
+docker-build:
+  stage: build
+  script:
+    - echo "Building Docker image using host system Docker..."
+    - docker build -t anvex-speak-dashboard:$CI_COMMIT_REF_SLUG .
+    - echo "Docker image built successfully"
+    - docker images
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+trivy-scan:
+  stage: security
+  image:
+    name: aquasec/trivy:latest
+    entrypoint: [""]
+  script:
+    - echo "Running Trivy scan on Docker image..."
+    - trivy image --no-progress anvex-speak-dashboard:$CI_COMMIT_REF_SLUG
+  needs:
+    - job: docker-build
+      artifacts: false
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
