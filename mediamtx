@@ -1,0 +1,65 @@
+###############################################
+# MediaMTX – RTMP Ingest + RTMP Output + LL-HLS
+###############################################
+
+logLevel: info
+logDestinations: [stdout]
+
+###############################################
+# Disable unused protocols (CPU-safe)
+###############################################
+rtsp: no
+webrtc: no
+srt: no
+api: no
+metrics: no
+pprof: no
+playback: no
+
+###############################################
+# RTMP (Ingest + Playback)
+###############################################
+rtmp: yes
+rtmpAddress: :1935
+rtmpEncryption: "no"
+
+###############################################
+# HLS (Low-Latency – minimum safe values)
+###############################################
+hls: yes
+hlsAddress: :8888
+hlsVariant: lowLatency
+
+# Lowest stable LL-HLS values
+hlsSegmentDuration: 500ms
+hlsPartDuration: 100ms
+
+# REQUIRED for LL-HLS (must be >= 7)
+hlsSegmentCount: 7
+
+###############################################
+# Authentication (open – secure later)
+###############################################
+authMethod: internal
+authInternalUsers:
+- user: any
+  pass:
+  ips: []
+  permissions:
+  - action: publish
+  - action: read
+
+###############################################
+# Default path behavior
+###############################################
+pathDefaults:
+  source: publisher
+  overridePublisher: yes
+  record: no
+
+###############################################
+# Paths
+###############################################
+paths:
+  all:
+    source: publisher
