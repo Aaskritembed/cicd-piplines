@@ -1,0 +1,71 @@
+###############################################
+# MediaMTX – RTMP Ingest + RTMP Output + LL-HLS
+###############################################
+
+logLevel: info
+logDestinations: [stdout]
+
+###############################################
+# Disable unused protocols (CPU-safe)
+###############################################
+rtsp: no
+webrtc: no
+srt: no
+
+###############################################
+# Enable API & Metrics (stats)
+###############################################
+api: yes
+apiAddress: 127.0.0.1:9997
+
+metrics: yes
+metricsAddress: 127.0.0.1:9998
+
+pprof: no
+playback: no
+
+###############################################
+# RTMP (Ingest + Playback)
+###############################################
+rtmp: yes
+rtmpAddress: :1935
+rtmpEncryption: "no"
+
+###############################################
+# HLS (Low-Latency – minimum safe values)
+###############################################
+hls: yes
+hlsAddress: :8888
+hlsVariant: lowLatency
+
+hlsSegmentDuration: 500ms
+hlsPartDuration: 100ms
+hlsSegmentCount: 7
+
+###############################################
+# Authentication
+###############################################
+authMethod: internal
+authInternalUsers:
+- user: any
+  pass:
+  ips: []
+  permissions:
+  - action: publish
+  - action: read
+  - action: api        # <<< REQUIRED FOR /v3/* STATS
+
+###############################################
+# Default path behavior
+###############################################
+pathDefaults:
+  source: publisher
+  overridePublisher: yes
+  record: no
+
+###############################################
+# Paths
+###############################################
+paths:
+  all:
+    source: publisher
